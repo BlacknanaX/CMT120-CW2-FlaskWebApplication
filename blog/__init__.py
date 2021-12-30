@@ -2,18 +2,27 @@ from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
+from config import config
 import pymysql
+
 pymysql.install_as_MySQLdb()
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'Les Barbapapa'
+bootstrap = Bootstrap()
+moment = Moment()
+db = SQLAlchemy()
 
-bootstrap = Bootstrap(app)
-moment = Moment(app)
 
-# config database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://c2050695:Blacknana985@csmysql.cs.cf.ac.uk:3306/c2050695_Blacknana'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+def create_app(config_name):
+    app = Flask(__name__)
+    app.config.from_object(config[config_name])
+    config[config_name].init_app(app)
 
-from blog import routes, models
+    bootstrap.init_app(app)
+    moment.init_app(app)
+    db.init_app(app)
+
+    # attach routes and custom error pages here
+    from .main import main as main_blueprint
+    app.register_blueprint(main_blueprint)
+
+    return app

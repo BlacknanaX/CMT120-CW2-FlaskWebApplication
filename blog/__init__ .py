@@ -4,7 +4,6 @@ from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from config import config
 
-
 bootstrap = Bootstrap()
 moment = Moment()
 db = SQLAlchemy()
@@ -23,4 +22,3 @@ def create_app(config_name):
     app.register_blueprint(main_blueprint)
 
     return app
-

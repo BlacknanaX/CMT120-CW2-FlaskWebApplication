@@ -1,4 +1,4 @@
-import  unittest
+import unittest
 from flask import current_app
 from blog import create_app, db
 

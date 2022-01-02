@@ -1,0 +1,59 @@
+{% extends 'bootstrap/base.html' %}
+
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}Login{% endblock %}
+
+{#{% block head %}#}
+{#    {{ super() }}#}
+{#    <link href='{{ url_for("static", filename="css/style.css") }}' rel="stylesheet">#}
+{#{% endblock %}#}
+
+{% block content %}
+    <div class="container">
+        <header class="page-header">
+            <h1>Welcome Back</h1>
+        </header>
+        <div class="panel-body">
+            <form class="form-horizontal" role="form" method="post">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {#                {{ form.email.label(class='col-sm-1 control-label') }}#}
+                    {{ form.email.label() }}
+                    {#                <div class="col-sm-11">#}
+                    <div class="input-group ">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-user"></span>
+                    </span>
+                        {{ form.email(id='username', class='form-control') }}
+                    </div>
+                    {#                </div>#}
+                </div>
+                <div class="form-group">
+                    {#                {{ form.password.label(class='col-sm-1 control-label') }}#}
+                    {{ form.password.label() }}
+
+                    {#                <div class="col-sm-11">#}
+                    <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-certificate"></span>
+                    </span>
+                        {{ form.password(id='password', class='form-control') }}
+                    </div>
+                    {#                </div>#}
+                </div>
+                <div class="form-group">
+                    {{ form.remember_me() }} {{ form.remember_me.label() }}
+                </div>
+                <div class="form-group">
+                    {#                <div class="col-sm-offset-2 col-sm-10">#}
+                    {{ form.submit(class='btn btn-default') }}
+                    {#                </div>#}
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    {#    {{ wtf.quick_form(form) }}#}
+{% endblock %}

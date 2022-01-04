@@ -1,5 +1,5 @@
 {% extends 'bootstrap/base.html' %}
-{% import 'bootsrap/wf.html' as wtf %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block title %}Register{% endblock %}
 
@@ -8,9 +8,22 @@
     <link href='{{ url_for("static", filename="css/style.css") }}' rel="stylesheet">
 {% endblock %}
 
+{% block navbar %}
+    <header id="top_navig_bar">
+        {% include 'base/header.html' %}
+    </header>
+{% endblock navbar %}
+
 {% block content %}
-    <div class="page-header">
-        <h1>Register</h1>
+    <div class="container">
+        <div class="page-header">
+            <h1>Register</h1>
+        </div>
+        {{ wtf.quick_form(form) }}
+
     </div>
-    {{ wtf.quick_form(form) }}
-{% endblock %}
+{% endblock content %}
+
+{% block footer %}
+    {% include 'base/footer.html' %}
+{% endblock footer %}

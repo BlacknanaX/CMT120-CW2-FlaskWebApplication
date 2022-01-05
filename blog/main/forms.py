@@ -7,18 +7,24 @@ from ..models import User
 
 class LoginForm(FlaskForm):
     email = StringField('Email',
-                        validators=[DataRequired('Please input your email'), Email('Invalid email. Please check')])
-    password = PasswordField('Password', validators=[DataRequired('Please input your password'), Length(1, 20)])
+                        validators=[DataRequired(), Email('Invalid email. Please check')])
+    password = PasswordField('Password', validators=[DataRequired(), Length(1, 20)])
     remember_me = BooleanField('Keep me logged in')
     submit = SubmitField('Log in')
 
 
 class RegisterForm(FlaskForm):
     id = StringField('ID', validators=[UUID()])
-    username = StringField('Username', validators=[DataRequired(), Length(1, 20)])
+    username = StringField('Username', validators=[DataRequired(), Length(1, 20),
+                                                   Regexp('^[A-Za-z0-9]+$', 0,
+                                                          message='Username contains alphanumeric characters only')])
     email = StringField('Email', validators=[DataRequired(), Email('Invalid email. Please check')])
-    password = PasswordField('Password', validators=[DataRequired(), Length(1, 20)])
-    confirm_password = PasswordField('Comfirm password', validators=[DataRequired(), Length(1, 20)])
+    password = PasswordField('Password', validators=[DataRequired(), Length(1, 20),
+                                                     Regexp('^[A-Za-z0-9]+$', 0,
+                                                            message='Username contains alphanumeric characters only')])
+    confirm_password = PasswordField('Confirm password',
+                                     validators=[DataRequired(), Length(1, 20),
+                                                 EqualTo('password', message='Passwords not match. Please try again')])
     submit = SubmitField('Register')
 
 

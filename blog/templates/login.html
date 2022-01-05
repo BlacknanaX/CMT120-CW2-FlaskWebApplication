@@ -23,21 +23,21 @@
         <div class="panel-body">
             <form class="form-horizontal" role="form" method="post">
                 {{ form.hidden_tag() }}
-                <div class="form-group">
+                <div class="form-group" data-toggle="popover" data-placement="right" title="test">
                     {{ form.email.label() }}
                     <div class="input-group ">
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-user"></span>
-                    </span>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </span>
                         {{ form.email(id='username', class='form-control') }}
                     </div>
                 </div>
                 <div class="form-group">
                     {{ form.password.label() }}
                     <div class="input-group">
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-certificate"></span>
-                    </span>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-certificate"></span>
+                        </span>
                         {{ form.password(id='password', class='form-control') }}
                     </div>
                 </div>
@@ -56,3 +56,25 @@
 {% block footer %}
     {% include 'base/footer.html' %}
 {% endblock footer %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            {% if form.errors.email %}
+                $('#username').parents('.form-group').addClass('has-error').append('<msg class="msg">\n' +
+                    '{% for msg in form.errors.email %}<p>{{ msg }}</p>{% endfor %}\n' +
+                    '</msg>');
+            {% else %}
+                $('#username').parents('.form-group').removeClass('has-error').remove('.msg');
+            {% endif %}
+            {% if form.errors.password %}
+                $('#password').parents('.form-group').addClass('has-error').append('<msg class="msg">\n' +
+                    '{% for msg in form.errors.password %}<p>{{ msg }}</p>{% endfor %}\n' +
+                    '</msg>');
+            {% else %}
+                $('#password').parents('.form-group').removeClass('has-error').remove('.msg');
+            {% endif %}
+        })
+    </script>
+{% endblock scripts %}

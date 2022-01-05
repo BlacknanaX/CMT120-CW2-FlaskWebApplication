@@ -14,7 +14,7 @@ class LoginForm(FlaskForm):
 
 
 class RegisterForm(FlaskForm):
-    id = StringField('ID', validators=[UUID()])
+    # id = StringField('ID', validators=[UUID()])
     username = StringField('Username', validators=[DataRequired(), Length(1, 20),
                                                    Regexp('^[A-Za-z0-9]+$', 0,
                                                           message='Username contains alphanumeric characters only')])

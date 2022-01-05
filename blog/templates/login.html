@@ -4,10 +4,10 @@
 
 {% block title %}Login{% endblock %}
 
-{#{% block head %}#}
-{#    {{ super() }}#}
-{#    <link href='{{ url_for("static", filename="css/style.css") }}' rel="stylesheet">#}
-{#{% endblock %}#}
+{% block head %}
+    {{ super() }}
+    <link href='{{ url_for("static", filename="css/style.css") }}' rel="stylesheet">
+{% endblock %}
 
 {% block navbar %}
     <header id="top_navig_bar">
@@ -23,7 +23,7 @@
         <div class="panel-body">
             <form class="form-horizontal" role="form" method="post">
                 {{ form.hidden_tag() }}
-                <div class="form-group" data-toggle="popover" data-placement="right" title="test">
+                <div class="form-group">
                     {{ form.email.label() }}
                     <div class="input-group ">
                         <span class="input-group-addon">

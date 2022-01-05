@@ -5,6 +5,7 @@ from . import main
 from .forms import LoginForm, RegisterForm
 from ..models import User
 from .. import db
+import uuid
 
 
 @main.route('/')  # home page
@@ -27,13 +28,13 @@ def user(username):
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.email.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):
-                login_user(user, form.remember_me.data)
-                next = request.args.get('next')
-                if next is None or not next.startswith('/'):
-                    next = url_for('main.home')
-                return redirect(next)
+            login_user(user, form.remember_me.data)
+            next = request.args.get('next')
+            if next is None or not next.startswith('/'):
+                next = url_for('main.home')
+            return redirect(next)
         return redirect(url_for('main.login_error'))
     return render_template('login.html', form=form)
 
@@ -50,5 +51,16 @@ def logout():
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        return None
+        user = User(id=str(uuid.uuid1()).replace('-', ''),
+                    username=form.username.data,
+                    email=form.email.data,
+                    password=form.password.data)
+        try:
+            db.session.add(user)
+            db.session.commit()
+        except ValueError:
+            flash('Sorry, there is a problem with your registration')
+        login_user(user)
+        return redirect(url_for('main.home'))
     return render_template('register.html', form=form)
+# register_successful=session.get('register_successful', True

@@ -22,7 +22,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.VARCHAR(255), unique=True, nullable=False)
     # password = db.Column(db.VARCHAR(20), nullable=False)
     password_hash = db.Column(db.VARCHAR(255), nullable=False)
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), default=0, nullable=False)
 
     def __repr__(self):
         return '<User %r>' % self.username

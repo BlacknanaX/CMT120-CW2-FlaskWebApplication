@@ -11,6 +11,20 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li><a href="/" id="home">Home</a></li>
+                {% if current_user.is_admin %}
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            System Management<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('main.role') }}">Manage Role</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{ url_for('main.category') }}">Manage Category</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{ url_for('main.submit_post') }}">Post Blog</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}

@@ -1,16 +1,17 @@
 from flask import render_template, session, redirect, url_for, request, flash
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user, current_user
 from datetime import datetime
 from . import main
-from .forms import LoginForm, RegisterForm
-from ..models import User
+from .forms import RoleForm, LoginForm, RegisterForm, CategoryForm, PostForm
+from ..models import Role, User, Category, Post
 from .. import db
 import uuid
 
 
 @main.route('/')  # home page
-def home():  # put application's code here
-    return render_template('home.html')
+def home():
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template('home.html', posts=posts)
 
 
 @main.route('/secret')
@@ -63,4 +64,72 @@ def register():
         login_user(user)
         return redirect(url_for('main.home'))
     return render_template('register.html', form=form)
-# register_successful=session.get('register_successful', True
+
+
+@main.route('/role')
+def role():
+    roles = Role.query.filter().all()
+    return render_template('management/role.html', roles=roles)
+
+
+@main.route('/addRole')
+def manage_role():
+    form = RoleForm()
+    if form.validate_on_submit():
+        role = Role(id=str(uuid.uuid1()).replace('-', ''),
+                    name=form.rolename.data)
+        try:
+            db.session.add(role)
+            db.session.commit()
+        except ValueError:
+            flash('Add role fail')
+        flash('Successful')
+        return redirect(url_for('main.role'))
+    return render_template('management/manageRole.html')
+
+
+@main.route('/category')
+def category():
+    categories = Category.query.filter().all()
+    return render_template('management/category.html', categories=categories)
+
+
+@main.route('/addCategory')
+def manage_category():
+    form = CategoryForm()
+    if form.validate_on_submit():
+        category = Category(id=str(uuid.uuid1()).replace('-', ''),
+                            name=form.name.data)
+        try:
+            db.session.add(category)
+            db.session.commit()
+        except ValueError:
+            flash('Add category fail')
+        flash('Successful')
+        return redirect(url_for('main.category'))
+    return render_template('management/manageCategory.html')
+
+
+@main.route('/submit_post')
+def submit_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(id=str(uuid.uuid1()).replace('-', ''),
+                    title=form.title.data,
+                    type=form.category.data,
+                    abstract=form.abstract.data,
+                    body=form.body.data,
+                    author=current_user._get_current_object())
+        try:
+            db.session.add(post)
+            db.session.commit()
+        except ValueError:
+            flash('Fail submit. Please try again')
+        flash('Submit successfully')
+        return redirect(url_for('main.home'))
+    return render_template('management/submitPost.html', form=form)
+
+
+# @main.route('/comment', method=['GET', 'POST'])
+# def comment():
+#     return None

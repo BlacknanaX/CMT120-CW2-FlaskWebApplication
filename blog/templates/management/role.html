@@ -1,0 +1,42 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Role{% endblock %}
+
+{#{% block head %}#}
+{#    {{ super() }}#}
+{#    <link href='{{ url_for("static", filename="css/style.css") }}' rel="stylesheet">#}
+{#{% endblock %}#}
+
+{% block navbar %}
+    <header id="top_navig_bar">
+        {% include 'base/header.html' %}
+    </header>
+{% endblock navbar %}
+
+{% block content %}
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table">
+                <caption>Role</caption>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NAME</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for role in roles %}
+                    <tr>
+                        <td>{{ role.id }}</td>
+                        <td>{{ role.rolename }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block footer %}
+    {% include 'base/footer.html' %}
+{% endblock footer %}

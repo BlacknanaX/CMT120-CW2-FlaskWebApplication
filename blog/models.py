@@ -1,7 +1,8 @@
 from . import db
 from . import login_manager
-from flask_login import UserMixin
+from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 
 class Role(db.Model):
@@ -13,6 +14,23 @@ class Role(db.Model):
 
     def __repr__(self):
         return '<Role %r>' % self.rolename
+
+
+class Category(db.Model):
+    __tablename__ = 'category'
+    id = db.Column(db.VARCHAR(32), primary_key=True)
+    name = db.Column(db.VARCHAR(255), nullable=False)
+
+
+class Post(db.Model):
+    __tablename__ = 'post'
+    id = db.Column(db.VARCHAR(32), primary_key=True)
+    title = db.Column(db.VARCHAR(255), nullable=False)
+    abstract = db.Column(db.Text(55), nullable=False)
+    body = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    author_id = db.Column(db.VARCHAR(32), db.ForeignKey('user.id'), nullable=False)
+    type_id = db.Column(db.VARCHAR(32), db.ForeignKey('category.id'), nullable=False)
 
 
 class User(UserMixin, db.Model):
@@ -37,6 +55,26 @@ class User(UserMixin, db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    # only the login user can submit comment
+    def can(self):
+        return True
+
+    def is_admin(self):
+        role = Role.query.filter_by(id=self.role_id).first()
+        return self.role_id is not None and role.rolename == 'admin'
+
+
+class AnonymousUser(AnonymousUserMixin):
+    # only the login user can submit comment
+    def can(self):
+        return False
+
+    def is_admin(self):
+        return False
+
+
+login_manager.anonymous_user = AnonymousUser
 
 
 @login_manager.user_loader

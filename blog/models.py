@@ -76,7 +76,7 @@ class Post(db.Model):
                       'ul', 'h1', 'h2', 'h3', 'p']
         target.body_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=allow_tags, scrip=True))
+            tags=allow_tags, strip=True))
 
 
 class AnonymousUser(AnonymousUserMixin):
@@ -90,7 +90,7 @@ class AnonymousUser(AnonymousUserMixin):
 
 login_manager.anonymous_user = AnonymousUser
 
-# db.event.listen(Post.body, 'set', Post.on_changed_body)
+db.event.listen(Post.body, 'set', Post.on_changed_body)
 
 
 @login_manager.user_loader

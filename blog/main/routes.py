@@ -14,6 +14,11 @@ def home():
     return render_template('home.html', posts=posts)
 
 
+@main.route('/search')
+def search():
+    return None
+
+
 @main.route('/secret')
 @login_required
 def secret():
@@ -88,14 +93,9 @@ def manage_role():
     return render_template('management/manageRole.html')
 
 
-@main.route('/category')
+@main.route('/category', methods=['GET', 'POST'])
 def category():
     categories = Category.query.filter().all()
-    return render_template('management/category.html', categories=categories)
-
-
-@main.route('/addCategory')
-def manage_category():
     form = CategoryForm()
     if form.validate_on_submit():
         category = Category(id=str(uuid.uuid1()).replace('-', ''),
@@ -107,16 +107,38 @@ def manage_category():
             flash('Add category fail')
         flash('Successful')
         return redirect(url_for('main.category'))
-    return render_template('management/manageCategory.html')
+    return render_template('management/category.html', categories=categories, form=form)
+
+
+# @main.route('/addCategory')
+# def manage_category():
+#     form = CategoryForm()
+#     if form.validate_on_submit():
+#         category = Category(id=str(uuid.uuid1()).replace('-', ''),
+#                             name=form.name.data)
+#         try:
+#             db.session.add(category)
+#             db.session.commit()
+#         except ValueError:
+#             flash('Add category fail')
+#         flash('Successful')
+#         return redirect(url_for('main.category'))
+#     # return render_template('management/addCategory.html', form=form)
+#     # return redirect(url_for('main.category'))
+#     return None
 
 
 @main.route('/submit_post')
 def submit_post():
     form = PostForm()
+    category_info_list = Category.query.all()
+    if len(category_info_list) != 0:
+        choicelist = [(category_info.id, category_info.name) for category_info in category_info_list]
+        form.category.choices = choicelist
     if form.validate_on_submit():
         post = Post(id=str(uuid.uuid1()).replace('-', ''),
                     title=form.title.data,
-                    type=form.category.data,
+                    category=form.category.data,
                     abstract=form.abstract.data,
                     body=form.body.data,
                     author=current_user._get_current_object())
@@ -129,6 +151,11 @@ def submit_post():
         return redirect(url_for('main.home'))
     return render_template('management/submitPost.html', form=form)
 
+
+@main.route('/post/<id>')
+def post(id):
+    post = Post.query.get_or_404(id)
+    return render_template('post.html', post=post)
 
 # @main.route('/comment', method=['GET', 'POST'])
 # def comment():

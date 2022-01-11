@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectMultipleField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectMultipleField, RadioField
 from wtforms import ValidationError
 from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo
+from flask_pagedown.fields import PageDownField
 from ..models import User, Category
 
 
@@ -43,8 +44,12 @@ class CategoryForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
+    # category_info_list = Category.query.all()
+    # choices = [(category_info.id, category_info.name) for category_info in category_info_list]
+
     title = StringField('Title', validators=[DataRequired()])
-    category = SelectMultipleField('Category', validators=[DataRequired()], choices=[1, 2, 3, 4, 5])  # , choice=PostType.query.filter().all())
+    category = SelectMultipleField('Category', validators=[DataRequired()])  # , choice=PostType.query.filter().all())
     abstract = TextAreaField('Abstract', validators=[DataRequired(), Length(1, 55)])
-    body = TextAreaField('Body', validators=[DataRequired()])
+    body = PageDownField('Body', validators=[DataRequired()])
     submit = SubmitField('Submit')
+

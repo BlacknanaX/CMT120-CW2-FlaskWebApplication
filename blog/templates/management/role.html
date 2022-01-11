@@ -20,14 +20,14 @@
                 <caption>Role</caption>
                 <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>NUM</th>
                     <th>NAME</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for role in roles %}
                     <tr>
-                        <td>{{ role.id }}</td>
+                        <td>{{ roles.index(role) + 1 }}</td>
                         <td>{{ role.rolename }}</td>
                     </tr>
                 {% endfor %}

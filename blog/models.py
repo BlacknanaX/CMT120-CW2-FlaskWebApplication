@@ -3,6 +3,8 @@ from . import login_manager
 from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from markdown import markdown
+import bleach
 
 
 class Role(db.Model):
@@ -20,17 +22,6 @@ class Category(db.Model):
     __tablename__ = 'category'
     id = db.Column(db.VARCHAR(32), primary_key=True)
     name = db.Column(db.VARCHAR(255), nullable=False)
-
-
-class Post(db.Model):
-    __tablename__ = 'post'
-    id = db.Column(db.VARCHAR(32), primary_key=True)
-    title = db.Column(db.VARCHAR(255), nullable=False)
-    abstract = db.Column(db.Text(55), nullable=False)
-    body = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    author_id = db.Column(db.VARCHAR(32), db.ForeignKey('user.id'), nullable=False)
-    type_id = db.Column(db.VARCHAR(32), db.ForeignKey('category.id'), nullable=False)
 
 
 class User(UserMixin, db.Model):
@@ -65,6 +56,27 @@ class User(UserMixin, db.Model):
         return self.role_id is not None and role.rolename == 'admin'
 
 
+class Post(db.Model):
+    __tablename__ = 'post'
+    id = db.Column(db.VARCHAR(32), primary_key=True)
+    title = db.Column(db.VARCHAR(255), nullable=False)
+    abstract = db.Column(db.Text(55), nullable=False)
+    body = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    author_id = db.Column(db.VARCHAR(32), db.ForeignKey('user.id'), nullable=False)
+    category_id = db.Column(db.VARCHAR(32), db.ForeignKey('category.id'), nullable=False)
+    body_html = db.Column(db.Text)
+
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allow_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote',
+                      'code', 'em', 'i', 'li', 'ol', 'pre', 'strong',
+                      'ul', 'h1', 'h2', 'h3', 'p']
+        target.body_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allow_tags, scrip=True))
+
+
 class AnonymousUser(AnonymousUserMixin):
     # only the login user can submit comment
     def can(self):
@@ -76,7 +88,10 @@ class AnonymousUser(AnonymousUserMixin):
 
 login_manager.anonymous_user = AnonymousUser
 
+# db.event.listen(Post.body, 'set', Post.on_changed_body)
+
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(str(user_id))
+

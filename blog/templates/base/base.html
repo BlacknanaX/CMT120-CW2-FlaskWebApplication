@@ -1,0 +1,27 @@
+{% extends "bootstrap/base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block head %}
+    {{ super() }}
+    <link href='{{ url_for("static", filename="css/style.css") }}' rel="stylesheet">
+{% endblock %}
+
+{% block navbar %}
+    <header id="top_navig_bar">
+        {% include 'base/header.html' %}
+    </header>
+{% endblock navbar %}
+
+{% block content %}
+{% endblock content %}
+
+{% block footer %}
+    {% include 'base/footer.html' %}
+{% endblock footer %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment() }}
+{% endblock scripts %}
+
+

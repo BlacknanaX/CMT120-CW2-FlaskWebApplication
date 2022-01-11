@@ -33,6 +33,8 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.VARCHAR(255), nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), default=0, nullable=False)
 
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
+
     def __repr__(self):
         return '<User %r>' % self.username
 

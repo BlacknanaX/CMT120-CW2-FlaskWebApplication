@@ -1,18 +1,6 @@
-{% extends 'bootstrap/base.html' %}
-{% import 'bootstrap/wtf.html' as wtf %}
-
+{% extends 'base/base.html' %}
 {% block title %}Register{% endblock %}
 
-{#{% block head %}#}
-{#    {{ super() }}#}
-{#    <link href='{{ url_for("static", filename="css/style.css") }}' rel="stylesheet">#}
-{#{% endblock %}#}
-
-{% block navbar %}
-    <header id="top_navig_bar">
-        {% include 'base/header.html' %}
-    </header>
-{% endblock navbar %}
 
 {% block content %}
     <div class="container">
@@ -61,7 +49,3 @@
         </div>
     </div>
 {% endblock content %}
-
-{% block footer %}
-    {% include 'base/footer.html' %}
-{% endblock footer %}

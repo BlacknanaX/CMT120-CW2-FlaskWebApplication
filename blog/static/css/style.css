@@ -19,18 +19,37 @@ msg {
     background-color: #333;
     border-color: #9d9d9d;
 }
-.search-btn.focus, .search-btn:focus{
+
+.search-btn.focus, .search-btn:focus {
     color: #fff;
     background-color: #333;
     border-color: #9d9d9d;
     text-decoration: unset;
 }
-.search-btn:active:focus, .search-btn:active:hover{
+
+.search-btn:active:focus, .search-btn:active:hover {
     color: #fff;
     background-color: #333;
     border-color: #9d9d9d;
     /*text-decoration: unset;*/
 }
-/*#form-submit {*/
-/*    display: none;*/
-/*}*/
+
+#form-submit {
+    display: none;
+}
+
+.blog-post li {
+    list-style: none;
+}
+
+.blog-post .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #e5e5e5;
+}
+
+.post-date span {
+    display: inline !important;
+    float: right;
+}

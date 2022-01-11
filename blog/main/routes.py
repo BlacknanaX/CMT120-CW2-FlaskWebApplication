@@ -110,25 +110,7 @@ def category():
     return render_template('management/category.html', categories=categories, form=form)
 
 
-# @main.route('/addCategory')
-# def manage_category():
-#     form = CategoryForm()
-#     if form.validate_on_submit():
-#         category = Category(id=str(uuid.uuid1()).replace('-', ''),
-#                             name=form.name.data)
-#         try:
-#             db.session.add(category)
-#             db.session.commit()
-#         except ValueError:
-#             flash('Add category fail')
-#         flash('Successful')
-#         return redirect(url_for('main.category'))
-#     # return render_template('management/addCategory.html', form=form)
-#     # return redirect(url_for('main.category'))
-#     return None
-
-
-@main.route('/submit_post')
+@main.route('/submit_post', methods=['GET', 'POST'])
 def submit_post():
     form = PostForm()
     category_info_list = Category.query.all()
@@ -138,7 +120,7 @@ def submit_post():
     if form.validate_on_submit():
         post = Post(id=str(uuid.uuid1()).replace('-', ''),
                     title=form.title.data,
-                    category=form.category.data,
+                    category_id=form.category.data,
                     abstract=form.abstract.data,
                     body=form.body.data,
                     author=current_user._get_current_object())

@@ -23,6 +23,8 @@ class Category(db.Model):
     id = db.Column(db.VARCHAR(32), primary_key=True)
     name = db.Column(db.VARCHAR(255), nullable=False)
 
+    posts = db.relationship('Post', backref='category', lazy='dynamic')
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
@@ -34,6 +36,7 @@ class User(UserMixin, db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), default=0, nullable=False)
 
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -69,11 +72,31 @@ class Post(db.Model):
     category_id = db.Column(db.VARCHAR(32), db.ForeignKey('category.id'), nullable=False)
     body_html = db.Column(db.Text)
 
+    comments = db.relationship('Comment', backref='post', lazy='dynamic')
+
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
         allow_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote',
                       'code', 'em', 'i', 'li', 'ol', 'pre', 'strong',
                       'ul', 'h1', 'h2', 'h3', 'p']
+        target.body_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allow_tags, strip=True))
+
+
+class Comment(db.Model):
+    __tablename__ = 'comment'
+    id = db.Column(db.VARCHAR(32), primary_key=True)
+    body = db.Column(db.Text)
+    body_html = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    rating = db.Column(db.Integer, default=0)
+    author_id = db.Column(db.VARCHAR(32), db.ForeignKey('user.id'))
+    post_id = db.Column(db.VARCHAR(32), db.ForeignKey('post.id'))
+
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allow_tags = ['a', 'abbr', 'acronym', 'b', 'code', 'em', 'i', 'strong']
         target.body_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
             tags=allow_tags, strip=True))
@@ -91,9 +114,9 @@ class AnonymousUser(AnonymousUserMixin):
 login_manager.anonymous_user = AnonymousUser
 
 db.event.listen(Post.body, 'set', Post.on_changed_body)
+db.event.listen(Comment.body, 'set', Comment.on_changed_body)
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(str(user_id))
-

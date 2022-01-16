@@ -7,9 +7,10 @@
     <div class="container">
         <header class="page-header">
             <h1 class="post_title">{{ post.title }}</h1>
+            {#            <i>{{ post.author.username }}</i>#}
         </header>
-        <div class="panel-body">
-            <i class="detailed_description">{{ post.abstract }}</i>
+        <div class="panel-body post_content">
+            <p class="lead detailed_description">{{ post.abstract }}</p>
             <div class="post-body">
                 {% if post.body_html %}
                     {{ post.body_html | safe }}
@@ -17,6 +18,99 @@
                     {{ post.body }}
                 {% endif %}
             </div>
+            <div class="comment-count">
+                <span class="glyphicon glyphicon-comment"></span> {{ post.comments.count() }}
+            </div>
+        </div>
+        <div class="comments">
+            <header class="comment_header">
+                <h4>Comments</h4>
+            </header>
+            <div class="panel-body">
+                <span class="rating">
+                    <label>Please Rate(option)&nbsp;&nbsp;</label>
+                    <span class="stars"></span>
+                </span>
+                {{ wtf.quick_form(form) }}
+{#                <form class="form-horizontal" role="form" method="post">#}
+{#                    {{ form.hidden_tag() }}#}
+{#                    <div class="form-group">#}
+{#                        {{ form.body.label() }}#}
+{#                        {{ form.body }}#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        {{ form.rating.label() }}#}
+{#                        {{ form.rating(id='input_rating') }}#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        {{ form.submit() }}#}
+{#                    </div>#}
+{#                </form>#}
+                <ul class="comment_body">
+                    <li class="divider"></li>
+                    {% for comment in post.comments %}
+                        <li>
+                            <h6 class="comment_author">
+                                <a href="#">{{ comment.author.username }}</a>
+                                <span class="post_rating">
+                                    {% for item in range(comment.rating) %}
+                                        <span class="glyphicon glyphicon-star"></span>
+                                    {% endfor %}
+                                    {% for empty in range(5 - comment.rating) %}
+                                        <span class="glyphicon glyphicon-star-empty"></span>
+                                    {% endfor %}
+                                </span>
+                            </h6>
+                            <div class="comment_date">{{ moment(comment.timestamp).fromNow() }}</div>
+                            <div class="comment_text">{{ comment.body }}</div>
+                        </li>
+                        <li class="divider"></li>
+                    {% endfor %}
+                </ul>
+                {% if pagination.total != 0 %}
+                    <div class="pagination">
+                        {{ macros.pagination_widget(pagination, '.post', fragment='#comments', id=post.id) }}
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endblock content %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            const str = '' +
+                '<span class="glyphicon glyphicon-star"></span>' +
+                '<span class="glyphicon glyphicon-star-empty"></span>' +
+                '<span class="glyphicon glyphicon-star-empty"></span>' +
+                '<span class="glyphicon glyphicon-star-empty"></span>' +
+                '<span class="glyphicon glyphicon-star-empty"></span>';
+            let curr = str;
+            $('.stars').html(str);
+
+            $('.stars').hover(function () {
+                $('.stars .glyphicon').hover(function () {
+                    $(this).addClass('glyphicon-star').removeClass('glyphicon-star-empty');
+                    $(this).prevAll('span').addClass('glyphicon-star').removeClass('glyphicon-star-empty');
+                    $(this).nextAll('span').addClass('glyphicon-star-empty').removeClass('glyphicon-star');
+                });
+                $('.stars .glyphicon').click(function () {
+                    $(this).addClass('glyphicon-star').removeClass('glyphicon-star-empty');
+                    $(this).prevAll('span').addClass('glyphicon-star').removeClass('glyphicon-star-empty');
+                    $(this).nextAll('span').addClass('glyphicon-star-empty').removeClass('glyphicon-star');
+                    curr = $('.stars').html();
+                    {#console.log(curr);#}
+                    let rating = 5 - $(this).nextAll('span').length;
+                    $('input[name="rating"]').val(rating);
+                    {#console.log($(this).nextAll('span').length);#}
+
+                });
+            }, function () {
+                $(this).html(curr);
+            });
+
+        })
+    </script>
+{% endblock %}

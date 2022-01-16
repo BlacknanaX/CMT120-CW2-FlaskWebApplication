@@ -1,17 +1,23 @@
-from flask import render_template, session, redirect, url_for, request, flash
+from flask import render_template, session, redirect, url_for, request, flash, current_app
 from flask_login import login_required, login_user, logout_user, current_user
 from datetime import datetime
 from . import main
-from .forms import RoleForm, LoginForm, RegisterForm, CategoryForm, PostForm
-from ..models import Role, User, Category, Post
+from .forms import RoleForm, LoginForm, RegisterForm, CategoryForm, PostForm, CommentForm, SortForm
+from ..models import Role, User, Category, Post, Comment
 from .. import db
 import uuid
 
 
-@main.route('/')  # home page
+@main.route('/', methods=['GET', 'POST'])  # home page
 def home():
+    form = SortForm(sort='date_desc')
     posts = Post.query.order_by(Post.timestamp.desc()).all()
-    return render_template('home.html', posts=posts)
+    if form.validate_on_submit():
+        if form.sort.data == 'date_desc':
+            posts = Post.query.order_by(Post.timestamp.desc()).all()
+        elif form.sort.data == 'date_asc':
+            posts = Post.query.order_by(Post.timestamp.asc()).all()
+    return render_template('home.html', form=form, posts=posts)
 
 
 @main.route('/search')
@@ -134,10 +140,38 @@ def submit_post():
     return render_template('management/submitPost.html', form=form)
 
 
-@main.route('/post/<id>')
+@main.route('/post/<id>', methods=['GET', 'POST'])
 def post(id):
     post = Post.query.get_or_404(id)
-    return render_template('post.html', post=post)
+    form = CommentForm()
+    if form.validate_on_submit():
+        if current_user.can():
+            comment = Comment(id=str(uuid.uuid1()).replace('-', ''),
+                              body=form.body.data,
+                              rating=form.rating.data,
+                              post=post,
+                              author=current_user._get_current_object())
+            try:
+                db.session.add(comment)
+                db.session.commit()
+            except ValueError:
+                flash('Comment publish fail')
+        else:
+            flash('Please log in first')
+        flash('Your comment has been published.')
+        return redirect(url_for('main.post', id=post.id, page=-1))
+    page = request.args.get('page', 1, type=int)
+    if page == -1:
+        page = (post.comments.count() - 1) // \
+               current_app.config['FLASK_COMMENTS_PER_PAGE'] + 1
+    pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
+        page, per_page=current_app.config['FLASK_COMMENTS_PER_PAGE'],
+        error_out=False
+    )
+    comments = pagination.items
+    return render_template('post.html', post=post, form=form,
+                           comments=comments, pagination=pagination)
+    # return render_template('post.html', post=post)
 
 # @main.route('/comment', method=['GET', 'POST'])
 # def comment():

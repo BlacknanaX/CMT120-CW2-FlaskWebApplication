@@ -1,6 +1,7 @@
 class Config:
     SECRET_KEY = 'Les Barbapapa'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    FLASK_COMMENTS_PER_PAGE = 10
 
     @staticmethod
     def init_app(app):

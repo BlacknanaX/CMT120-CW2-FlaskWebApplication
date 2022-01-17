@@ -23,11 +23,11 @@ class RegisterForm(FlaskForm):
     # id = StringField('ID', validators=[UUID()])
     username = StringField('Username', validators=[DataRequired(), Length(1, 20),
                                                    Regexp('^[A-Za-z0-9]+$', 0,
-                                                          message='Username contains alphanumeric characters only')])
+                                                          message='Your username contain invalid characters.')])
     email = StringField('Email', validators=[DataRequired(), Email('Invalid email. Please check')])
     password = PasswordField('Password', validators=[DataRequired(), Length(1, 20),
                                                      Regexp('^[A-Za-z0-9]+$', 0,
-                                                            message='Password contains alphanumeric characters only')])
+                                                            message='Your password contain invalid characters.')])
     confirm_password = PasswordField('Confirm password',
                                      validators=[DataRequired(), Length(1, 20),
                                                  EqualTo('password', message='Passwords not match. Please try again')])

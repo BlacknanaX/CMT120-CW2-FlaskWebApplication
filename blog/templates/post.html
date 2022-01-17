@@ -28,24 +28,10 @@
             </header>
             <div class="panel-body">
                 <span class="rating">
-                    <label>Please Rate(option)&nbsp;&nbsp;</label>
+                    <label>Please Rate(optional)&nbsp;&nbsp;</label>
                     <span class="stars"></span>
                 </span>
                 {{ wtf.quick_form(form) }}
-{#                <form class="form-horizontal" role="form" method="post">#}
-{#                    {{ form.hidden_tag() }}#}
-{#                    <div class="form-group">#}
-{#                        {{ form.body.label() }}#}
-{#                        {{ form.body }}#}
-{#                    </div>#}
-{#                    <div class="form-group">#}
-{#                        {{ form.rating.label() }}#}
-{#                        {{ form.rating(id='input_rating') }}#}
-{#                    </div>#}
-{#                    <div class="form-group">#}
-{#                        {{ form.submit() }}#}
-{#                    </div>#}
-{#                </form>#}
                 <ul class="comment_body">
                     <li class="divider"></li>
                     {% for comment in post.comments %}
@@ -101,11 +87,8 @@
                     $(this).prevAll('span').addClass('glyphicon-star').removeClass('glyphicon-star-empty');
                     $(this).nextAll('span').addClass('glyphicon-star-empty').removeClass('glyphicon-star');
                     curr = $('.stars').html();
-                    {#console.log(curr);#}
                     let rating = 5 - $(this).nextAll('span').length;
                     $('input[name="rating"]').val(rating);
-                    {#console.log($(this).nextAll('span').length);#}
-
                 });
             }, function () {
                 $(this).html(curr);

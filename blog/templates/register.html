@@ -8,8 +8,8 @@
             <h1>Register</h1>
         </div>
         <div class="panel-body">
-            {% for message in get_flashed_messages() %}
-                <div class="alert alert-warning">
+            {% for message in get_flashed_messages(category_filter="logout") %}
+                <div class="alert alert-success">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     {{ message }}
                 </div>
@@ -49,3 +49,39 @@
         </div>
     </div>
 {% endblock content %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            {% if form.errors.username %}
+                $('#first_name_new').parents('.form-group').addClass('has-error').append('<msg class="msg">\n' +
+                    '{% for msg in form.errors.username %}<p>{{ msg }}</p>{% endfor %}\n' +
+                    '</msg>');
+            {% else %}
+                $('#first_name_new').parents('.form-group').removeClass('has-error').remove('.msg');
+            {% endif %}
+            {% if form.errors.email %}
+                $('#email_new').parents('.form-group').addClass('has-error').append('<msg class="msg">\n' +
+                    '{% for msg in form.errors.email %}<p>{{ msg }}</p>{% endfor %}\n' +
+                    '</msg>');
+            {% else %}
+                $('#email_new').parents('.form-group').removeClass('has-error').remove('.msg');
+            {% endif %}
+            {% if form.errors.password %}
+                $('#password').parents('.form-group').addClass('has-error').append('<msg class="msg">\n' +
+                    '{% for msg in form.errors.password %}<p>{{ msg }}</p>{% endfor %}\n' +
+                    '</msg>');
+            {% else %}
+                $('#password').parents('.form-group').removeClass('has-error').remove('.msg');
+            {% endif %}
+            {% if form.errors.confirm_password %}
+                $('#password_confirm').parents('.form-group').addClass('has-error').append('<msg class="msg">\n' +
+                    '{% for msg in form.errors.confirm_password %}<p>{{ msg }}</p>{% endfor %}\n' +
+                    '</msg>');
+            {% else %}
+                $('#password_confirm').parents('.form-group').removeClass('has-error').remove('.msg');
+            {% endif %}
+        });
+    </script>
+{% endblock scripts %}

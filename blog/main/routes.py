@@ -55,7 +55,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out')
+    flash('You have been logged out', 'logout')
     return redirect(url_for('main.home'))
 
 
@@ -71,7 +71,7 @@ def register():
             db.session.add(user)
             db.session.commit()
         except ValueError:
-            flash('Sorry, there is a problem with your registration')
+            flash('Sorry, there is a problem with your registration', 'registerError')
         login_user(user)
         return redirect(url_for('main.home'))
     return render_template('register.html', form=form)
@@ -155,10 +155,10 @@ def post(id):
                 db.session.add(comment)
                 db.session.commit()
             except ValueError:
-                flash('Comment publish fail')
+                flash('Comment publish fail', 'commentError')
         else:
-            flash('Please log in first')
-        flash('Your comment has been published.')
+            flash('Please log in first', 'commentError')
+        flash('Your comment has been published.', 'commentMsg')
         return redirect(url_for('main.post', id=post.id, page=-1))
     page = request.args.get('page', 1, type=int)
     if page == -1:

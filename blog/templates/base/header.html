@@ -45,17 +45,11 @@
                     <input type="text" class="form-control search" placeholder="Search" id="search">
                 </div>
                 <button type="button" class="btn btn-default search search-btn" onclick="Search($('#search').val())">
-                    <a id="forSearch" href="#"></a>Submit</button>
+                    <a id="forSearch" href="#"></a>Submit
+                </button>
             </form>
         </div>
     </div>
 </nav>
 
-{% block scripts %}
-    <script type="text/javascript">
-        function Search(val) {
-            $('#forSearch').attr('href','{{ url_for('main.search', data=val) }}');
-        }
-    </script>
-{% endblock scripts %}
 

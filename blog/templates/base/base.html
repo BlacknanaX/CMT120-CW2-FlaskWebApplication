@@ -23,6 +23,17 @@
 {% block scripts %}
     {{ super() }}
     {{ moment.include_moment() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+                {% for message in get_flashed_messages(category_filter="logout") %}
+                    alert("{{ message }}");
+                {% endfor %}
+        });
+
+            function Search(val) {
+                $('#forSearch').attr('href', '{{ url_for('main.search', data=val) }}');
+            }
+    </script>
 {% endblock scripts %}
 
 

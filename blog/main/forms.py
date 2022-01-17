@@ -27,7 +27,7 @@ class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email('Invalid email. Please check')])
     password = PasswordField('Password', validators=[DataRequired(), Length(1, 20),
                                                      Regexp('^[A-Za-z0-9]+$', 0,
-                                                            message='Username contains alphanumeric characters only')])
+                                                            message='Password contains alphanumeric characters only')])
     confirm_password = PasswordField('Confirm password',
                                      validators=[DataRequired(), Length(1, 20),
                                                  EqualTo('password', message='Passwords not match. Please try again')])

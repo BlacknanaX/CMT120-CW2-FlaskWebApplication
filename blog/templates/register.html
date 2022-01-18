@@ -54,6 +54,20 @@
     {{ super() }}
     <script type="text/javascript">
         $(document).ready(function () {
+            $('#first_name_new').keypress(function () {
+                if ($('#first_name_new').val().length === 20) {
+                    $('#first_name_new').parents('.form-group').addClass('has-error').append('<msg class="msg">\n' +
+                        '<p>Field cannot be longer than 20 characters</p>\n' +
+                        '</msg>');
+                }
+            });
+            $('#password_new').keypress(function () {
+                if ($('#password_new').val().length === 20) {
+                    $('#password_new').parents('.form-group').addClass('has-error').append('<msg class="msg">\n' +
+                        '<p>Field cannot be longer than 20 characters</p>\n' +
+                        '</msg>');
+                }
+            })
             {% if form.errors.username %}
                 $('#first_name_new').parents('.form-group').addClass('has-error').append('<msg class="msg">\n' +
                     '{% for msg in form.errors.username %}<p>{{ msg }}</p>{% endfor %}\n' +
@@ -69,11 +83,11 @@
                 $('#email_new').parents('.form-group').removeClass('has-error').remove('.msg');
             {% endif %}
             {% if form.errors.password %}
-                $('#password').parents('.form-group').addClass('has-error').append('<msg class="msg">\n' +
+                $('#password_new').parents('.form-group').addClass('has-error').append('<msg class="msg">\n' +
                     '{% for msg in form.errors.password %}<p>{{ msg }}</p>{% endfor %}\n' +
                     '</msg>');
             {% else %}
-                $('#password').parents('.form-group').removeClass('has-error').remove('.msg');
+                $('#password_new').parents('.form-group').removeClass('has-error').remove('.msg');
             {% endif %}
             {% if form.errors.confirm_password %}
                 $('#password_confirm').parents('.form-group').addClass('has-error').append('<msg class="msg">\n' +

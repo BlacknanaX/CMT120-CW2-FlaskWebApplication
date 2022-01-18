@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectMultipleField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectMultipleField, \
+    SelectField
 from wtforms import ValidationError
 from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo
 from flask_pagedown.fields import PageDownField
@@ -14,18 +15,26 @@ class RoleForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = StringField('Email',
                         validators=[DataRequired(), Email('Invalid email. Please check')])
-    password = PasswordField('Password', validators=[DataRequired(), Length(1, 20)])
+    password = PasswordField('Password', validators=[DataRequired(),
+                                                     Length(1, 20,
+                                                            'Length out off range, should not longer than 20 characters'),
+                                                     Regexp('^[A-Za-z0-9]+$', 0,
+                                                            message='Your password contain invalid characters.')])
     remember_me = BooleanField('Keep me logged in')
     submit = SubmitField('Log in')
 
 
 class RegisterForm(FlaskForm):
     # id = StringField('ID', validators=[UUID()])
-    username = StringField('Username', validators=[DataRequired(), Length(1, 20),
+    username = StringField('Username', validators=[DataRequired(),
+                                                   Length(1, 20,
+                                                          'Length out off range, should not longer than 20 characters'),
                                                    Regexp('^[A-Za-z0-9]+$', 0,
                                                           message='Your username contain invalid characters.')])
     email = StringField('Email', validators=[DataRequired(), Email('Invalid email. Please check')])
-    password = PasswordField('Password', validators=[DataRequired(), Length(1, 20),
+    password = PasswordField('Password', validators=[DataRequired(),
+                                                     Length(1, 20,
+                                                            'Length out off range, should not longer than 20 characters'),
                                                      Regexp('^[A-Za-z0-9]+$', 0,
                                                             message='Your password contain invalid characters.')])
     confirm_password = PasswordField('Confirm password',
@@ -60,4 +69,3 @@ class CommentForm(FlaskForm):
 class SortForm(FlaskForm):
     sort = SelectField('Sort date by', choices=[('date_asc', 'ASC'), ('date_desc', 'DESC')])
     submit = SubmitField('Submit')
-

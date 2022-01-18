@@ -44,6 +44,20 @@
     {{ super() }}
     <script type="text/javascript">
         $(document).ready(function () {
+            {#$('#username').keypress(function () {#}
+            {#    if ($('#username').val().length === 20) {#}
+            {#        $('#username').parents('.form-group').addClass('has-error').append('<msg class="msg">\n' +#}
+            {#            '<p>Field cannot be longer than 20 characters</p>\n' +#}
+            {#            '</msg>');#}
+            {#    }#}
+            //});
+            $('#password').keypress(function () {
+                if ($('#password').val().length === 20) {
+                    $('#password').parents('.form-group').addClass('has-error').append('<msg class="msg">\n' +
+                        '<p>Field cannot be longer than 20 characters</p>\n' +
+                        '</msg>');
+                }
+            })
             {% if form.errors.email %}
                 $('#username').parents('.form-group').addClass('has-error').append('<msg class="msg">\n' +
                     '{% for msg in form.errors.email %}<p>{{ msg }}</p>{% endfor %}\n' +

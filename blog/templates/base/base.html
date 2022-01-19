@@ -14,6 +14,7 @@
 {% endblock navbar %}
 
 {% block content %}
+    {% include 'base/footer.html' %}
 {% endblock content %}
 
 {% block footer %}
@@ -25,14 +26,17 @@
     {{ moment.include_moment() }}
     <script type="text/javascript">
         $(document).ready(function () {
-                {% for message in get_flashed_messages(category_filter="logout") %}
-                    alert("{{ message }}");
-                {% endfor %}
+            {% for message in get_flashed_messages(category_filter="logout") %}
+                alert("{{ message }}");
+            {% endfor %}
+            {% for message in get_flashed_messages(category_filter="register") %}
+                alert("{{ message }}");
+            {% endfor %}
         });
 
-            function Search(val) {
-                $('#forSearch').attr('href', '{{ url_for('main.search', data=val) }}');
-            }
+        function Search(val) {
+            $('#forSearch').attr('href', '{{ url_for('main.search', data=val) }}');
+        }
     </script>
 {% endblock scripts %}
 

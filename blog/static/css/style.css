@@ -9,6 +9,24 @@
     margin-right: 10px;
 }
 
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin-bottom: 0 !important;
+}
+
+footer dl {
+    display: inline-block;
+    width: 15%;
+    margin-left: 45%;
+    padding-left: 20px;
+    border-left: 1px solid #000;
+}
+.copyright {
+    margin-bottom: -20px;
+}
+
 msg {
     display: block;
 }
@@ -39,7 +57,7 @@ msg {
     /*text-decoration: unset;*/
 }
 
-.date_sort{
+.date_sort {
     float: right;
 }
 
@@ -67,39 +85,47 @@ msg {
     padding-bottom: 9px;
     border-bottom: 1px solid #eee;
 }
+
 .comment-count {
     float: right;
 }
+
 .comment-count span {
     position: relative;
     top: 3px;
 }
+
 .comment_body {
     padding-inline-start: 0;
 }
+
 .comment_body .divider {
     height: 1px;
     margin: 9px 0;
     overflow: hidden;
     background-color: #e5e5e5;
 }
+
 .comment_body li {
     list-style: none;
 }
+
 .comment_date span {
     display: inline !important;
     float: right;
 }
+
 /*#select_rating {*/
 /*    display: inline;*/
 /*    cursor: pointer;*/
 /*}*/
-.rating span{
+.rating span {
     cursor: pointer;
     font-size: 22px;
     position: relative;
     top: 3px;
 }
+
 .glyphicon-star {
     color: #FFD700;
 }
@@ -107,6 +133,7 @@ msg {
 .pagination {
     float: right;
 }
+
 label[for="rating"], input[name="rating"] {
     display: none;
 }

@@ -73,6 +73,7 @@ def register():
         except ValueError:
             flash('Sorry, there is a problem with your registration', 'registerError')
         login_user(user)
+        flash('Register successful!', 'register')
         return redirect(url_for('main.home'))
     return render_template('register.html', form=form)
 

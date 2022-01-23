@@ -55,7 +55,7 @@ class CategoryForm(FlaskForm):
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     category = SelectMultipleField('Category', validators=[DataRequired()])  # , choice=PostType.query.filter().all())
-    abstract = TextAreaField('Abstract', validators=[DataRequired(), Length(1, 55)])
+    abstract = TextAreaField('Abstract', validators=[DataRequired()])
     body = PageDownField('Body', validators=[DataRequired()])
     submit = SubmitField('Submit')
 

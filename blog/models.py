@@ -78,10 +78,11 @@ class Post(db.Model):
     def on_changed_body(target, value, oldvalue, initiator):
         allow_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote',
                       'code', 'em', 'i', 'li', 'ol', 'pre', 'strong',
-                      'ul', 'h1', 'h2', 'h3', 'p']
-        target.body_html = bleach.linkify(bleach.clean(
-            markdown(value, output_format='html'),
-            tags=allow_tags, strip=True))
+                      'ul', 'h1', 'h2', 'h3', 'p', 'table', 'tr', 'td', 'th', 'thead', 'tbody']
+        # target.body_html = bleach.linkify(bleach.clean(
+        #     markdown(value, output_format='html'),
+        #     tags=allow_tags, strip=True))
+        target.body_html = markdown(value, extensions=['tables', 'toc'])
 
 
 class Comment(db.Model):

@@ -8,7 +8,10 @@
     display: inline;
     margin-right: 10px;
 }
-
+#per_greet:hover{
+    color: #9d9d9d;
+    cursor: unset;
+}
 footer {
     position: absolute;
     bottom: 0;

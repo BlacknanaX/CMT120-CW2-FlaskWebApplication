@@ -26,6 +26,16 @@
     {{ moment.include_moment() }}
     <script type="text/javascript">
         $(document).ready(function () {
+            {# setting the position of the footer #}
+            if (screen.availHeight > $('body').outerHeight()) {
+                const contHeight = $('body').children('.container').outerHeight();
+                const screenHeight = screen.availHeight;
+                const bodyHeight = $('body').outerHeight();
+                const footerHeight = $('footer').outerHeight();
+                let height = contHeight + screenHeight - bodyHeight - footerHeight + 40;
+                $('body').children('.container').css("height", height);
+            }
+
             {% for message in get_flashed_messages(category_filter="logout") %}
                 alert("{{ message }}");
             {% endfor %}

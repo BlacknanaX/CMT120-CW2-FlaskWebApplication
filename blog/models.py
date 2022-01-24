@@ -82,7 +82,7 @@ class Post(db.Model):
         # target.body_html = bleach.linkify(bleach.clean(
         #     markdown(value, output_format='html'),
         #     tags=allow_tags, strip=True))
-        target.body_html = markdown(value, extensions=['tables', 'toc'])
+        target.body_html = markdown(value, extensions=['tables', 'toc', 'fenced_code'])
 
 
 class Comment(db.Model):

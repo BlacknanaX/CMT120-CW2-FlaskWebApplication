@@ -147,9 +147,13 @@ def post(id):
     form = CommentForm()
     if form.validate_on_submit():
         if current_user.can():
+            if form.rating.data == '':
+                rating = 0
+            else:
+                rating = form.rating.data
             comment = Comment(id=str(uuid.uuid1()).replace('-', ''),
                               body=form.body.data,
-                              rating=form.rating.data,
+                              rating=rating,
                               post=post,
                               author=current_user._get_current_object())
             try:

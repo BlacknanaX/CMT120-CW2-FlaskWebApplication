@@ -18,11 +18,15 @@ footer {
     width: 100%;
     margin-bottom: 0 !important;
 }
+/*.footer-menu {*/
+
+/*}*/
 
 footer dl {
     display: inline-block;
     width: 15%;
-    margin-left: 45%;
+    /*margin-left: 45%;*/
+    text-align: left;
     padding-left: 20px;
     border-left: 1px solid #000;
 }

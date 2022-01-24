@@ -7,16 +7,16 @@ import pymysql
 
 pymysql.install_as_MySQLdb()
 
-application = create_app(os.getenv('FLASK_CONFIG') or 'default')
-migrate = Migrate(application, db)
+app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+migrate = Migrate(app, db)
 
 
-@application.shell_context_processor
+@app.shell_context_processor
 def make_shell_context():
     return dict(db=db, User=User)
 
 
-@application.cli.command()
+@app.cli.command()
 @click.argument('test_names', nargs=-1)
 def test(test_names):
     """Run the unit tests."""

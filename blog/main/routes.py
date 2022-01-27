@@ -8,7 +8,11 @@ from .. import db
 import uuid
 
 
-@main.route('/', methods=['GET', 'POST'])  # home page
+# code to direct to the home page and show the posts at home page
+# taken from Grinberg, M. 2018. Flask Web Development: Developing Web Application with Python. 2nd ed. Sebastopol: O’Reilly Media
+# Chapter 11
+# Added code to allow for sorting the posts by date desc or asc
+@main.route('/', methods=['GET', 'POST'])
 def home():
     form = SortForm(sort='date_desc')
     posts = Post.query.order_by(Post.timestamp.desc()).all()
@@ -36,6 +40,12 @@ def user(username):
     return render_template('', usernname=username)
 
 
+# code to direct to log in page and allow users to log in
+# taken from Grinberg, M. 2018. Flask Web Development: Developing Web Application with Python. 2nd ed. Sebastopol: O’Reilly Media
+# Chapter 8
+# Removed the code setting for the next page
+# Added code to redirect to the error page when logged in failed
+# when successfully logged in, the page redirect to the home page
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -43,14 +53,15 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
-            next = request.args.get('next')
-            if next is None or not next.startswith('/'):
-                next = url_for('main.home')
-            return redirect(next)
+            return redirect(url_for('main.home'))
         return redirect(url_for('main.login_error'))
     return render_template('login.html', form=form)
 
 
+# code to log out
+# taken from Grinberg, M. 2018. Flask Web Development: Developing Web Application with Python. 2nd ed. Sebastopol: O’Reilly Media
+# Chapter 8
+# Added code to send message to the front-end that the user logged out successfully
 @main.route('/logout')
 @login_required
 def logout():
@@ -59,6 +70,12 @@ def logout():
     return redirect(url_for('main.home'))
 
 
+# code to direct to the register page and allow users to register
+# taken from Grinberg, M. 2018. Flask Web Development: Developing Web Application with Python. 2nd ed. Sebastopol: O’Reilly Media
+# Chapter 8
+# Added code to set user id automatically as a 32 length uuid
+# Added code to detect whether the user data commit successfully and send the result as a message to the front-end
+# Added code to authenticate the registered user and login the page directly with redirecting to the home page
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -141,6 +158,13 @@ def submit_post():
     return render_template('management/submitPost.html', form=form)
 
 
+# code to direct to the post page and allow users to comment and show comments
+# taken from Grinberg, M. 2018. Flask Web Development: Developing Web Application with Python. 2nd ed. Sebastopol: O’Reilly Media
+# Chapter 13
+# Added code to calculate the star rate
+# Added code to set comment id automatically as a 32 length uuid
+# Added code to detect whether the comment data commit successfully and send the result as a message to the front-end
+# Added code to authenticate the registered user and login the page directly with redirecting to the home page
 @main.route('/post/<id>', methods=['GET', 'POST'])
 def post(id):
     post = Post.query.get_or_404(id)

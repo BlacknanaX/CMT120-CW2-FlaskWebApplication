@@ -1,3 +1,7 @@
+{# code to use macro to create pagination
+   taken from Grinberg, M. 2018. Flask Web Development: Developing Web Application with Python. 2nd ed. Sebastopol: O’Reilly Media
+   Chapter 11
+#}
 {% macro pagination_widget(pagination, endpoint) %}
     <ul class="pagination">
         <li {% if not pagination.has_prev %}class="disabled"{% endif %}>

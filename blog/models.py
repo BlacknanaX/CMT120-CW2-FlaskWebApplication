@@ -41,6 +41,10 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
+    # code to transform the password to hash to store in the database,
+    # and verify whether the password the user input fit the password hash already stored in th database
+    # taken from Grinberg, M. 2018. Flask Web Development: Developing Web Application with Python. 2nd ed. Sebastopol: O’Reilly Media
+    # Chapter 8
     @property
     def password(self):
         raise AttributeError('password is not exist')
@@ -74,14 +78,17 @@ class Post(db.Model):
 
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
 
+    # code to change the input markdown to html
+    # taken from Grinberg, M. 2018. Flask Web Development: Developing Web Application with Python. 2nd ed. Sebastopol: O’Reilly Media
+    # Chapter 11
+    # Removed the clear function
+    # Added extensions for markdown
+    # code of how to add extensions
+    # taken from Python-Markdown 3.3.6 Documentation
+    # accessed 23-1-2022
+    # https://python-markdown.github.io/extensions/
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
-        allow_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote',
-                      'code', 'em', 'i', 'li', 'ol', 'pre', 'strong',
-                      'ul', 'h1', 'h2', 'h3', 'p', 'table', 'tr', 'td', 'th', 'thead', 'tbody']
-        # target.body_html = bleach.linkify(bleach.clean(
-        #     markdown(value, output_format='html'),
-        #     tags=allow_tags, strip=True))
         target.body_html = markdown(value, extensions=['tables', 'toc', 'fenced_code'])
 
 

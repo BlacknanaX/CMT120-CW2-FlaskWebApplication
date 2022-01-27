@@ -42,6 +42,9 @@ class RegisterForm(FlaskForm):
                                                  EqualTo('password', message='Passwords not match. Please try again')])
     submit = SubmitField('Register')
 
+    # # code to check whether the email used to register is unique
+    # # taken from Grinberg, M. 2018. Flask Web Development: Developing Web Application with Python. 2nd ed. Sebastopol: O’Reilly Media
+    # # Chapter 8
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
             raise ValidationError('Email already exist')

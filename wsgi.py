@@ -11,6 +11,9 @@ application = create_app(os.getenv('FLASK_CONFIG') or 'default')
 migrate = Migrate(application, db)
 
 
+# code to configure the flask shell comment automatically add objects to the import list
+# taken from Grinberg, M. 2018. Flask Web Development: Developing Web Application with Python. 2nd ed. Sebastopol: O’Reilly Media
+# Chapter 5
 @application.shell_context_processor
 def make_shell_context():
     return dict(db=db, User=User)
